@@ -1,3 +1,7 @@
+function setarAtributo(value1, value2, value3, value4){
+  value1.setAttribute(value2, value3)
+  value4.appendChild(value1)
+}
 fetch('../../infos/herois.json')
   .then((response) => response.json())
   .then(data => {
@@ -37,33 +41,45 @@ fetch('../../infos/herois.json')
       divCard.appendChild(cardDiv)
 
       cardDiv.addEventListener('click', ()=>{
+        const modal = document.querySelector('#modal')
         divCard.style.display = "none"
-        // TODO Criar Modal
-        // const modal = document.createElement('div')
-        // modal.classList.add('modal')
+        modal.style.display = "flex"
+        
 
-        // // TODO adicionar imagem
-        // const modalImg = document.createElement('img')
-        // modalImg.classList.add('modal-img')
-        // modalImg.src = srcHero
-        // modalImg.alt = item.nome
-        // modal.appendChild(modalImg)
+        const modalContent = document.createElement('div')
+        setarAtributo(modalContent, 'id', 'content', modal)
 
-        // // TODO adicionar titulo
-        // const modalTitle = document.createElement('h2')
-        // modalTitle.classList.add('modal-title')
-        // modalTitle.innerHTML = item.nome
-        // modal.appendChild(modalTitle)
+        // TODO adicionar imagem
+        const modalImg = document.createElement('div')
+        setarAtributo(modalImg, 'id', 'modal-img', modalContent)
+        
+        const imageSrc = document.createElement('img')
+        imageSrc.src = srcHero
+        imageSrc.alt = item.nome
+        modalImg.appendChild(imageSrc)
+
+        // TODO adicionar titulo
+        const modalBody = document.createElement('div')
+        setarAtributo(modalBody, 'id', 'modal-body', modalContent)
+
+        const modalTitleCard = document.createElement('div')
+        setarAtributo(modalTitleCard, 'id', 'modal-title', modalBody)
+        modalTitleCard.innerHTML = '<h2>' + item.nome + '</h2>'
 
         // // TODO Ficha do heroi
-        // const modalFicha = document.createElement('div')
-        // modalFicha.classList.add('modal-ficha')
-        // modalFicha.innerHTML = '<p><span>Nome Original:</span> ' + item.nome_original + '</p><br /><p><span>Identidade Secreta:</span> ' + item.identified + '</p><br /><p><span>Origem:</span> ' + item.origem + '</p><br /><p><span>Altura:</span> ' + item.altura + '</p><br /><p><span>Peso:</span> ' + item.peso + '</p><br /><p><span>Ocupação:</span> ' + item.ocupacao + '</p><br /><p><span>Afiliações:</span> ' + item.afiliacoes + '</p>'
+        const modalFichaHeroi = document.createElement('div')
+        setarAtributo(modalFichaHeroi, 'id', 'modal-desc', modalBody)
+        modalFichaHeroi.innerHTML = '<p ><span>Nome Original: </span>' + item.nome_original + '</p><p ><span>Identidade Secreta: </span>' + item.identified + '</p><p ><span>Origem: </span>' + item.origem + '</p><p ><span>Altura: </span>' + item.altura + '</p><p ><span>Peso: </span>' + item.peso +'</p><p ><span>Ocupação: </span>' + item.ocupacao + '</p><p ><span>Afiliações: </span>' + item.afiliacao + '</p><p><span>Hostória</span></p>'
         
-        // console.log(modal)
+        // TODO Historia do Heroi
+        const histHeroi = document.createElement('div')
+        setarAtributo(histHeroi, 'id', 'modal-hist', modalBody)
+        histHeroi.innerHTML = '<p>A primeira criatura desconhecida encontrada em Estados Unidos, o homem Adrian Toomes (Adi Toome</p>'
+        
+        console.log(modal)
         
       })
     });
   })
   .catch(error => console.error(error));
-  
+ 
