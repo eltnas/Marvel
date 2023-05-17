@@ -5,6 +5,7 @@ function setarAtributo(value1, value2, value3, value4){
 fetch('../../infos/herois.json')
   .then((response) => response.json())
   .then(data => {
+    const dataItems = data.length
     const divCard = document.querySelector('#card')
     data.forEach(item => {
       let idHro = item.image
@@ -21,65 +22,116 @@ fetch('../../infos/herois.json')
       const imgHeros = document.createElement('img')
       let srcHero = idHro.replace('./', '../../infos/')
       imgHeros.src = srcHero
-      cardImg.appendChild(imgHeros)
 
       //  TODO: box-title
       const cardTitle = document.createElement('div')
       cardTitle.classList.add('box-title');
       const hroNome = item.nome
-      if(hroNome.length >= 25 ){
-        cardTitle.innerHTML = '<marquee>' + hroNome + '</marquee>'
+      if(hroNome.length >= 16 ){
+        cardTitle.innerHTML = '<marquee>' + item.nome + '</marquee>'
       } else{
-        cardTitle.innerHTML = hroNome
+        cardTitle.innerHTML = item.nome
       }
-
-      // 
-
       //  TODO: Adiciona os elementos ao html
       cardDiv.appendChild(cardImg)
+      cardImg.appendChild(imgHeros)
       cardDiv.appendChild(cardTitle)
       divCard.appendChild(cardDiv)
 
       cardDiv.addEventListener('click', ()=>{
+        // TODO: Seleciona as divs
         const modal = document.querySelector('#modal')
-        divCard.style.display = "none"
+        const imgPersonagem = document.getElementById('modal-img')
+        const titlePerson = document.getElementById('modal-title')
+        const modalDesc = document.getElementById('modal-desc')
+
+        // Aqui faz ela ficar visivel
         modal.style.display = "flex"
-        
 
-        const modalContent = document.createElement('div')
-        setarAtributo(modalContent, 'id', 'content', modal)
+        // Navegação
+        const modalSeta = document.querySelectorAll('.seta'); // Usamos querySelectorAll para obter todos os elementos com a classe '.seta'
+        modalSeta.forEach(seta => {
+          seta.addEventListener('click', () => {
+            const boxDiv = document.querySelector('.box-card');
+            const idAtual = item.id;
+            console.log('boxDiv = ' + boxDiv.id)
+            console.log('idAtual = ' +idAtual);
+            console.log(seta.id)
+            if (String(seta.id) === 'seta-esq') {
+              // Navegação para a esquerda
+              if (idAtual.id == '0') {
+                boxDiv.id = String(dataItems);
+              } else {
+                let idDiv = parseInt(cardDiv.id) - 1;
+                boxDiv.id = String(idDiv)
+              }
+            } else {
+              // Navegação para a direita
+              if (parseInt(idAtual) == dataItems) {
+                cardDiv.id = String(0);
+              } else {
+                idDiv = parseInt(cardDiv.id) + 1;
+                cardDiv.id = String(idDiv)
+              }
+            }
+          });
+        });
 
-        // TODO adicionar imagem
-        const modalImg = document.createElement('div')
-        setarAtributo(modalImg, 'id', 'modal-img', modalContent)
-        
-        const imageSrc = document.createElement('img')
-        imageSrc.src = srcHero
-        imageSrc.alt = item.nome
-        modalImg.appendChild(imageSrc)
+        // Imagem do Personagem
+        const persImg = document.createElement('img');
+        persImg.src = srcHero;
+        persImg.alt = hroNome;
+        persImg.classList.add('img-personagem');
+        imgPersonagem.appendChild(persImg)
 
-        // TODO adicionar titulo
-        const modalBody = document.createElement('div')
-        setarAtributo(modalBody, 'id', 'modal-body', modalContent)
+        // Titulo
+        if(hroNome.length >= 20 ){
+          titlePerson.innerHTML = '<marquee>' + item.nome + '</marquee>'
+        } else{
+          titlePerson.innerHTML = item.nome
+        }
+        const btnClose = document.createElement('img');
+        btnClose.src = '../../img/botao-fechar.png';
+        btnClose.alt = 'Fechar';
+        btnClose.classList.add('btn-close');
+        titlePerson.appendChild(btnClose)
+        btnClose.addEventListener('click', ()=> {
+          modal.style.display = "none"
+          divCard.style.display = "flex"
+          persImg.remove()
+        })
+        // Ficha do personagem
+        const infos = '<p><span>Nome Original: </span>' + item.nome_original + '</p>\n' +
+            '          <p><span>Identidade Secreta: </span>' + item.identified + '</p>\n' +
+            '          <p><span>Origem: </span>' + item.origem + '</p>\n' +
+            '          <p><span>Altura: </span>' + item.altura + '</p>\n' +
+            '          <p><span>Peso: </span>' + item.peso + '</p>\n' +
+            '          <p><span>Ocupação: </span>' + item.ocupacao + '</p>\n' +
+            '          <p><span>Afiliações: </span>' + item.afiliacoes + '</p>\n' +
+            '          <p id="hist"><span><u>História</u></span></p>';
+        modalDesc.innerHTML = infos;
 
-        const modalTitleCard = document.createElement('div')
-        setarAtributo(modalTitleCard, 'id', 'modal-title', modalBody)
-        modalTitleCard.innerHTML = '<h2>' + item.nome + '</h2>'
+        // Aqui ele vai ler a descrição do Personagem e vai mostrar na tela
+        const urlDesc = item.descricao
+        urlDescricao = urlDesc.replace('./', '../../infos/')
+        //console.log(urlDescricao)
+        fetch(urlDescricao)
+            .then(response => response.text())
+            .then(data => {
+              const modalHist = document.createElement('div')
+              modalHist.setAttribute('id', 'modal-hist')
+              modalHist.innerHTML = '<p>' + data + '</p>';
 
-        // // TODO Ficha do heroi
-        const modalFichaHeroi = document.createElement('div')
-        setarAtributo(modalFichaHeroi, 'id', 'modal-desc', modalBody)
-        modalFichaHeroi.innerHTML = '<p ><span>Nome Original: </span>' + item.nome_original + '</p><p ><span>Identidade Secreta: </span>' + item.identified + '</p><p ><span>Origem: </span>' + item.origem + '</p><p ><span>Altura: </span>' + item.altura + '</p><p ><span>Peso: </span>' + item.peso +'</p><p ><span>Ocupação: </span>' + item.ocupacao + '</p><p ><span>Afiliações: </span>' + item.afiliacao + '</p><p><span>Hostória</span></p>'
-        
-        // TODO Historia do Heroi
-        const histHeroi = document.createElement('div')
-        setarAtributo(histHeroi, 'id', 'modal-hist', modalBody)
-        histHeroi.innerHTML = '<p>A primeira criatura desconhecida encontrada em Estados Unidos, o homem Adrian Toomes (Adi Toome</p>'
-        
-        console.log(modal)
-        
+              modalDesc.appendChild(modalHist)
+              console.log(modal);
+            })
+            .catch(error => {
+              // Trate possíveis erros
+              console.error('Ocorreu um erro:', error);
+            });
+
       })
+
     });
   })
   .catch(error => console.error(error));
- 
