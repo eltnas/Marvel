@@ -2,6 +2,7 @@ function setarAtributo(value1, value2, value3, value4){
   value1.setAttribute(value2, value3)
   value4.appendChild(value1)
 }
+
 fetch('../../infos/herois.json')
   .then((response) => response.json())
   .then(data => {
@@ -45,37 +46,19 @@ fetch('../../infos/herois.json')
         const titlePerson = document.getElementById('modal-title')
         const modalDesc = document.getElementById('modal-desc')
 
-        // Aqui faz ela ficar visivel
-        modal.style.display = "flex"
+        function fecharCard(){
+          modal.style.display = "none"
+          divCard.style.display = "flex"
+          persImg.remove()
+        }
 
-        // Navegação
-        const modalSeta = document.querySelectorAll('.seta'); // Usamos querySelectorAll para obter todos os elementos com a classe '.seta'
-        modalSeta.forEach(seta => {
-          seta.addEventListener('click', () => {
-            const boxDiv = document.querySelector('.box-card');
-            const idAtual = item.id;
-            console.log('boxDiv = ' + boxDiv.id)
-            console.log('idAtual = ' +idAtual);
-            console.log(seta.id)
-            if (String(seta.id) === 'seta-esq') {
-              // Navegação para a esquerda
-              if (idAtual.id == '0') {
-                boxDiv.id = String(dataItems);
-              } else {
-                let idDiv = parseInt(cardDiv.id) - 1;
-                boxDiv.id = String(idDiv)
-              }
-            } else {
-              // Navegação para a direita
-              if (parseInt(idAtual) == dataItems) {
-                cardDiv.id = String(0);
-              } else {
-                idDiv = parseInt(cardDiv.id) + 1;
-                cardDiv.id = String(idDiv)
-              }
-            }
-          });
-        });
+        // Aqui faz ela ficar visivel
+        modal.style.display = "flex";
+
+        const fundoBkg = document.getElementById('fundo-bkg');
+        fundoBkg.addEventListener('click', ()=>{
+          fecharCard();
+        })
 
         // Imagem do Personagem
         const persImg = document.createElement('img');
@@ -96,9 +79,7 @@ fetch('../../infos/herois.json')
         btnClose.classList.add('btn-close');
         titlePerson.appendChild(btnClose)
         btnClose.addEventListener('click', ()=> {
-          modal.style.display = "none"
-          divCard.style.display = "flex"
-          persImg.remove()
+          fecharCard()
         })
         // Ficha do personagem
         const infos = '<p><span>Nome Original: </span>' + item.nome_original + '</p>\n' +
